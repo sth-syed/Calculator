@@ -23,55 +23,39 @@
     return _programStack;
 }
 
-//- (void)setOperandStack:(NSMutableArray *)
-//{
-  //  _operandStack = operandStack;
-//}
-
 -(void) pushOperand:(double)operand
 {
     [self.programStack addObject:[NSNumber numberWithDouble:operand]];
     
 }
 
-//-(double)popOperand
-//{
-  //  NSNumber *operandObject = [self.operandStack lastObject];
-    //if (operandObject) [self.operandStack removeLastObject];
-    //return [operandObject doubleValue];
-//}
+-(double)performOperation:(NSString *)operation
+{
+    
+    [self.programStack addObject:operation];
+    return [CalcuBrain runProgram:self.program];
+    
+}
+
+-(void) pushVariable:(NSSting *) variableName{
+    
+}
+
+
 
 -(void)clearOperand
 {
     [self.programStack removeAllObjects];
-    //[self.operandStack removeAllObjects];
     return;
 }
-
-
-// Fr Dsplag reslt  Eter
-//-(double)enterPressOpr:(NSString *)operation
-//{
-  //  double resultE = 0;
-    //if ([operation isEqualToString:@"+"])
-    //{
-
-      //  resultE = [self popOperand] * [self popOperand];
-    //}
-    
-    //[self pushOperand:resultE];
-    
-    //return resultE;
-//}
 
 - (id)program
 {
     return [self.programStack copy];
 }
 
-+ (NSString *)descriptionOfProgram:(id)program
-{
-    return @"Implement this in Assignment";
++ (BOOL) isOperation:(NSString * ) name{
+    
 }
 
 + (double)popOperandOffStack:(NSMutableArray *)stack
@@ -83,97 +67,74 @@
     
     if ([topOfStack isKindOfClass:[NSNumber class]])
     {
-                NSLog(@"Result No=%@",topOfStack);
+        NSLog(@"Result No=%@",topOfStack);
         result = [topOfStack doubleValue];
-NSLog(@"Result No=%g",result);
+        NSLog(@"Result No=%g",result);
     }
     else if ([topOfStack isKindOfClass:[NSString class]])
     {
         NSString *operation = topOfStack;
         // Perform Operation
-        
-        //int count = [self.operandStack count];
-        //int count =
-        //NSLog(@"operandStack count = %d",count);
-        //double result = 0;
-        //double firstOperand = [self popOperandOffStack:stack];
-        //NSLog(@"firstOperand = %g",firstOperand);
-        
-        //if ([@"+-*/" rangeOfString:operation].location == NSNotFound) {
-            // but the single operation in here
+
         NSLog(@"Operation Selected=%@",topOfStack);
-            if ([@"π" isEqualToString:operation])
+        if ([@"π" isEqualToString:operation])
+        {
+            
+            result = [self popOperandOffStack:stack] * 3.14;
+        }
+        
+        else if ([@"sqrt" isEqualToString:operation])
+        {
+            
+            if ([self popOperandOffStack:stack] > 0)
             {
-                //result = popOperandOffStack:stack * 3.14;
-                
-                result = [self popOperandOffStack:stack] * 3.14;
+                result=sqrt([self popOperandOffStack:stack]);
+            }
+            else
+            {
+                result=0;
             }
             
-            else if ([@"sqrt" isEqualToString:operation])
-            {
-                
-                if ([self popOperandOffStack:stack] > 0)
-                {
-                    result=sqrt([self popOperandOffStack:stack]);
-                }
-                else
-                {
-                    result=0;
-                }
-                
-            }
-            
-            else if ([@"Sin" isEqualToString:operation])
-            {
-                result = sin([self popOperandOffStack:stack]);
-            }
-            
-            else if ([@"Cos" isEqualToString:operation])
-            {
-                result = cos([self popOperandOffStack:stack]);
-            }
-            
-            else if ([@"C" isEqualToString:operation])
-            {
-                //[self clearOperand] ;
-                return 0;
-            }
-            
-        //}
-        //else {
-          //  NSLog(@"We have two operand operation");
-            //if(count > 1){
-                //put the two operand operation in here
-              //  double secondOperand = [self popOperandOffStack:stack];
-                //NSLog(@"secondOperand = %g",secondOperand);
-                else if ([operation isEqualToString:@"+"])
-                {
-                    result =  [self popOperandOffStack:stack] + [self popOperandOffStack:stack];
-                }
-                
-                else if ([@"*" isEqualToString:operation])
-                {
-                    result =  [self popOperandOffStack:stack] * [self popOperandOffStack:stack];
-                }
-                
-                else if ([@"-" isEqualToString:operation])
-                {
-                    result =  [self popOperandOffStack:stack] - [self popOperandOffStack:stack];
-                }
-                
-                else if ([@"/" isEqualToString:operation])
-                {
-                    result =  [self popOperandOffStack:stack] / [self popOperandOffStack:stack];
-                }
-            //}
-            //else{
-             //   NSLog(@"Only one operand for two operand operation");
-               // result = firstOperand;
-            //}
-        //}
+        }
+        
+        else if ([@"Sin" isEqualToString:operation])
+        {
+            result = sin([self popOperandOffStack:stack]);
+        }
+        
+        else if ([@"Cos" isEqualToString:operation])
+        {
+            result = cos([self popOperandOffStack:stack]);
+        }
+        
+        else if ([@"C" isEqualToString:operation])
+        {
+            //[self clearOperand] ;
+            return 0;
+        }
+        
+        else if ([operation isEqualToString:@"+"])
+        {
+            result =  [self popOperandOffStack:stack] + [self popOperandOffStack:stack];
+        }
+        
+        else if ([@"*" isEqualToString:operation])
+        {
+            result =  [self popOperandOffStack:stack] * [self popOperandOffStack:stack];
+        }
+        
+        else if ([@"-" isEqualToString:operation])
+        {
+            result =  [self popOperandOffStack:stack] - [self popOperandOffStack:stack];
+        }
+        
+        else if ([@"/" isEqualToString:operation])
+        {
+            result =  [self popOperandOffStack:stack] / [self popOperandOffStack:stack];
+        }
+
         NSLog(@"Inside Result=%g",result);
-return result;
-        // Perform Operation
+        return result;
     }
     NSLog(@"Outside Result=%g",result);
     return result;
@@ -189,25 +150,37 @@ return result;
     return [self popOperandOffStack:stack];
 }
 
--(double)performOperation:(NSString *)operation
-{
-   
-        [self.programStack addObject:operation];
-        return [CalcuBrain runProgram:self.program];
-   
-    
-
-        //[self pushOperand:result];
-    
-    //return result;
-    
-}
-
 + (double)runProgram:(id)program usingVariableValues:(NSDictionary *)variableValues
 {
-    NSLog(@"Hello");
+    // 1- Change the program array to mutible
+    // 2- Check if there is variables is used
+    // 3- If there are varibale replace them with values from variableValues
+    // 4- runProgram and return the result
+    return 0;
 }
 
++ (NSNumber *) valueForVriable:(NSString *) name from:(NSDictionary *)variableValues{
+    // 1- find the vriable name in the dictionary
+    // 2- If variable name is found return the NSNumber object
+    // 3- Else return NSNumber with value zero
+}
+
++ (void) replaceProgram:(id) program variable:(NSString *) name withValue:(NSNumber *) value{
+    // 1- go over the program and if the variable name is found replace it with the value provided
+}
+
++(NSSet *)variablesUsedInProgram:(id)program{
+    // 1- Create empty NSSet
+    // 2- Go in the program array
+    // 3- If there is an NSString that is not an operation add it to NSSet
+    // 4- If NSSet is more than zero return it else return nil
+    return nil;
+}
+
++ (NSString *)descriptionOfProgram:(id)program
+{
+    return @"";
+}
 
 
 @end
