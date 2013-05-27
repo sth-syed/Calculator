@@ -16,6 +16,7 @@
 @implementation CalcuBrain
 
 @synthesize programStack = _programStack;
+//@synthesize chkoperation = _chkoperation;
 
 - (NSMutableArray *)programStack
 {
@@ -31,17 +32,11 @@
 
 -(double)performOperation:(NSString *)operation
 {
-    
+    // check for clear
     [self.programStack addObject:operation];
     return [CalcuBrain runProgram:self.program];
     
 }
-
--(void) pushVariable:(NSSting *) variableName{
-    
-}
-
-
 
 -(void)clearOperand
 {
@@ -49,12 +44,26 @@
     return;
 }
 
+-(void)pushvariable:(NSString *) variable {
+    [self.programStack addObject:variable];
+}
+
 - (id)program
 {
     return [self.programStack copy];
 }
 
-+ (BOOL) isOperation:(NSString * ) name{
++ (BOOL) isOperation:(id) name{
+    if([name isKindOfClass:[NSString class]]){
+        NSSet *_chkoperation = [NSSet setWithObjects:@"+", @"-", @"*", @"/", @"Sin", @"Cos", @"sqrt", @"π", nil];
+        return [_chkoperation containsObject:name];
+    }
+    else{
+        return NO;
+    }
+}
+
++ (void) pushOperandToStack:(NSMutableArray *)stack{
     
 }
 
@@ -68,7 +77,7 @@
     if ([topOfStack isKindOfClass:[NSNumber class]])
     {
         NSLog(@"Result No=%@",topOfStack);
-        result = [topOfStack doubleValue];
+        return [topOfStack doubleValue];
         NSLog(@"Result No=%g",result);
     }
     else if ([topOfStack isKindOfClass:[NSString class]])
@@ -80,20 +89,13 @@
         if ([@"π" isEqualToString:operation])
         {
             
-            result = [self popOperandOffStack:stack] * 3.14;
+            result = M_PI;
         }
         
         else if ([@"sqrt" isEqualToString:operation])
         {
             
-            if ([self popOperandOffStack:stack] > 0)
-            {
-                result=sqrt([self popOperandOffStack:stack]);
-            }
-            else
-            {
-                result=0;
-            }
+            result=sqrt([self popOperandOffStack:stack]);
             
         }
         
@@ -106,7 +108,7 @@
         {
             result = cos([self popOperandOffStack:stack]);
         }
-        
+        // remove this
         else if ([@"C" isEqualToString:operation])
         {
             //[self clearOperand] ;
@@ -133,10 +135,8 @@
             result =  [self popOperandOffStack:stack] / [self popOperandOffStack:stack];
         }
 
-        NSLog(@"Inside Result=%g",result);
-        return result;
     }
-    NSLog(@"Outside Result=%g",result);
+
     return result;
 }
 
@@ -156,6 +156,10 @@
     // 2- Check if there is variables is used
     // 3- If there are varibale replace them with values from variableValues
     // 4- runProgram and return the result
+    
+    NSMutableArray *stack;
+    stack= [program mutableCopy];
+    
     return 0;
 }
 
@@ -170,11 +174,24 @@
 }
 
 +(NSSet *)variablesUsedInProgram:(id)program{
-    // 1- Create empty NSSet
+    // 1- Create empty NSMutableSet
     // 2- Go in the program array
-    // 3- If there is an NSString that is not an operation add it to NSSet
+    // 3- If there is an NSString that is not an operation or NSNumber add it to NSSet
     // 4- If NSSet is more than zero return it else return nil
-    return nil;
+    NSMutableSet *chkVar = [[NSMutableSet alloc] init];
+    for(NSObject *item in program){
+        if(![CalcuBrain isOperation:item]){
+            if(![item isKindOfClass:[NSNumber class]]){
+                [chkVar addObject:item];
+            }
+        }
+    }
+    if([chkVar count] > 0){
+        return [chkVar copy];
+    }
+    else{
+        return nil;
+    }
 }
 
 + (NSString *)descriptionOfProgram:(id)program
