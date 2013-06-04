@@ -16,6 +16,8 @@
 @implementation CalcuBrain
 
 @synthesize programStack = _programStack;
+
+
 //@synthesize chkoperation = _chkoperation;
 
 - (NSMutableArray *)programStack
@@ -150,23 +152,46 @@
     return [self popOperandOffStack:stack];
 }
 
-+ (double)runProgram:(id)program usingVariableValues:(NSDictionary *)variableValues
-{
++ (double)runProgram:(id)program usingVariableValues:(NSDictionary *)variableValues{
+
     // 1- Change the program array to mutible
     // 2- Check if there is variables is used
     // 3- If there are varibale replace them with values from variableValues
     // 4- runProgram and return the result
     
-    NSMutableArray *stack;
-    stack= [program mutableCopy];
+    NSMutableArray *stack = [program mutableCopy];
     
-    return 0;
+    if (![program isKindOfClass:[NSArray class]]) return 0;
+    
+    for(int i=0; i < [stack count]; i++){
+        (NSLog(@"%d",i));
+        NSObject *item;
+         item = [stack objectAtIndex:i];
+        
+        if ([item isKindOfClass:[NSString class]]){
+            
+            }
+    return [self popOperandOffStack:stack];
 }
 
 + (NSNumber *) valueForVriable:(NSString *) name from:(NSDictionary *)variableValues{
     // 1- find the vriable name in the dictionary
     // 2- If variable name is found return the NSNumber object
     // 3- Else return NSNumber with value zero
+    
+    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:@"x",@"3",@"a",@"5",@"b",@"9" , nil];
+    NSArray *arr = [dict allKeys];
+    for (int i=0; i < arr.count; i++){
+        NSLog(@"%@",[dict valueForKey:[arr objectAtIndex:i]]);
+        
+        NSNumber *chkval = [variableValues objectForKey:dict];
+        if (![chkval isKindOfClass:[NSNumber class]]) {
+            chkval=[NSNumber numberWithInt:0];
+        }
+        chkval=[NSNumber numberWithInt:i];
+    }
+    
+
 }
 
 + (void) replaceProgram:(id) program variable:(NSString *) name withValue:(NSNumber *) value{
